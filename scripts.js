@@ -4,18 +4,6 @@ const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 let drawnImage;
 
-// console.log(canvas.width, canvas.height);
-// console.log(window.getComputedStyle(canvas).getPropertyValue("width"));
-// console.log(window.getComputedStyle(canvas).getPropertyValue("height"));
-// console.log(canvas.style.width, canvas.style.height);
-
-// const width = window.getComputedStyle(canvas).getPropertyValue("width");
-// canvas.width = width.slice(0, width.length - 2);
-// const height = window.getComputedStyle(canvas).getPropertyValue("height");
-// canvas.height = height.slice(0, height.length - 2);
-
-// console.log(canvas.width, canvas.height);
-
 function handleUpload(e) {
   e.preventDefault();
   // Get information on file uploaded
@@ -288,9 +276,30 @@ function colorChange(property, unit, e) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const imageClone = new Image();
   imageClone.src = drawnImage.src;
-  ctx.filter = `${property}(${e.target.value}${unit})`;
+  const newFilter = `${property}(${e.target.value}${unit})`;
+  filters[property] = newFilter;
+  const filtersArray = [];
+  for (const filter in filters) {
+    filtersArray.push(filters[filter])
+  }
+  console.log(filtersArray);
+  ctx.filter = filtersArray.join(" ");
+  console.log(filtersArray.join(" "));
+
   ctx.drawImage(imageClone, 0, 0);
 }
+
+const filters = {
+  brightness: null,
+  grayscale: null,
+  sepia: null,
+  invert: null,
+  blur: null,
+  saturate: null,
+  "hue-rotate": null,
+  opacity: null,
+  contrast: null,
+};
 
 // Restore original image and filters
 function resetImage(e) {
