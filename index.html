@@ -13,101 +13,109 @@
           <div>
             <h1>Image Upload</h1>
             <label for="image-input">Choose File</label>
-            <input type="file" id="image-input" name="image-input" style="display:none"/>
+            <input
+              type="file"
+              id="image-input"
+              name="image-input"
+              style="display: none"
+            />
           </div>
           <button type="submit">Load</button>
         </div>
       </form>
       <canvas id="canvas"> </canvas>
       <form id="filter-form">
-        <div class="top-left">
-          <label for="brightness">Brightness</label>
-          <input
-            type="range"
-            id="brightness-slider"
-            name="brightness-slider"
-            min="0"
-            max="200"
-          />
-          <label for="grayscale-slider">Grayscale</label>
-          <input
-            type="range"
-            id="grayscale-slider"
-            name="grayscale-slider"
-            min="0"
-            max="100"
-            value="0"
-          />
-          <label for="sepia-slider">Sepia</label>
-          <input
-            type="range"
-            id="sepia-slider"
-            name="sepia-slider"
-            min="0"
-            max="100"
-            value="0"
-          />
-          <label for="invert-slider">Invert</label>
-          <input
-            type="range"
-            id="invert-slider"
-            name="invert-slider"
-            min="0"
-            max="100"
-            value="0"
-          />
-          <label for="blur">Blur</label>
-          <input
-            type="range"
-            id="blur-slider"
-            name="blur-slider"
-            min="0"
-            max="10"
-            value="0"
-          />
+        <div>
+          <div class="top-left">
+            <label for="hue">Hue</label>
+            <input
+              type="range"
+              id="hue-slider"
+              name="hue-slider"
+              min="0"
+              max="360"
+              value="0"
+            />
+            <label for="grayscale-slider">Grayscale</label>
+            <input
+              type="range"
+              id="grayscale-slider"
+              name="grayscale-slider"
+              min="0"
+              max="100"
+              value="0"
+            />
+            <label for="sepia-slider">Sepia</label>
+            <input
+              type="range"
+              id="sepia-slider"
+              name="sepia-slider"
+              min="0"
+              max="100"
+              value="0"
+            />
+            <label for="invert-slider">Invert</label>
+            <input
+              type="range"
+              id="invert-slider"
+              name="invert-slider"
+              min="0"
+              max="100"
+              value="0"
+            />
+            <label for="blur">Blur</label>
+            <input
+              type="range"
+              id="blur-slider"
+              name="blur-slider"
+              min="0"
+              max="10"
+              value="0"
+            />
+          </div>
+          <div class="top-right">
+            <label for="saturation">Saturation</label>
+            <input
+              type="range"
+              id="saturation-slider"
+              name="saturation-slider"
+              min="0"
+              max="1000"
+              value="100"
+            />
+            <label for="contrast">Contrast</label>
+            <input
+              type="range"
+              id="contrast-slider"
+              name="contrast-slider"
+              min="0"
+              max="400"
+              value="100"
+            />
+            <label for="brightness">Brightness</label>
+            <input
+              type="range"
+              id="brightness-slider"
+              name="brightness-slider"
+              min="0"
+              max="200"
+            />
+            <label for="opacity">Opacity</label>
+            <input
+              type="range"
+              id="opacity-slider"
+              name="opacity-slider"
+              min="0"
+              max="100"
+              value="100"
+            />
+          </div>
         </div>
-        <div class="top-right">
-          <label for="saturation">Saturation</label>
-          <input
-            type="range"
-            id="saturation-slider"
-            name="saturation-slider"
-            min="0"
-            max="1000"
-            value="100"
-          />
-          <label for="hue">Hue</label>
-          <input
-            type="range"
-            id="hue-slider"
-            name="hue-slider"
-            min="0"
-            max="360"
-            value="0"
-          />
-          <label for="opacity">Opacity</label>
-          <input
-            type="range"
-            id="opacity-slider"
-            name="opacity-slider"
-            min="0"
-            max="100"
-            value="100"
-          />
-          <label for="contrast">Contrast</label>
-          <input
-            type="range"
-            id="contrast-slider"
-            name="contrast-slider"
-            min="0"
-            max="400"
-            value="100"
-          />
+        <div class="buttons-container">
+          <button id="edges-button" type="button">Edges</button>
+          <button id="reset-button" type="button">Reset</button>
+          <a id="download-button">Download</a>
         </div>
-        
-        <button id="edges-button" type="button">Edges</button>
-        <button id="reset-button" type="button">Reset</button>
-        <a id="download-button">Download</a>
       </form>
     </div>
     <script src="scripts.js"></script>

@@ -132,6 +132,9 @@
 #canvas {
   height: 70%;
   display: none;
+  box-shadow: 0px 0px 10px rgba(155, 155, 155, 0.548);
+  border: 2px solid rgba(53, 125, 240, 0.575);
+  background-color: white;
 }
 
 #filter-form {
@@ -140,22 +143,22 @@
   flex-wrap: wrap;
   justify-content: center;
   display: none;
+  box-shadow: 0px 0px 10px rgba(155, 155, 155, 0.548);
+  border: 2px solid rgba(53, 125, 240, 0.575);
+  background-color: white;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  margin-top: 10px;
 }
 
-#download-button {
-  text-decoration: none;
-  color: black;
-  border: 1px solid rgb(121, 121, 121);
-  display: block;
-  outline: rgb(110, 110, 110);
-  border-radius: 2px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+#filter-form > div:first-child {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .top-left,
@@ -164,6 +167,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 
 .top-left input,
@@ -175,5 +183,41 @@
 .top-right label {
   width: 25%;
   text-align: center;
-  padding: 5px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+}
+
+.buttons-container {
+  padding: 0px;
+}
+
+.buttons-container button,
+.buttons-container a {
+  border: 1px solid rgb(43, 111, 221);
+  border-radius: 20px;
+  outline: none;
+  background-color: white;
+  font-size: 1.4rem;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  padding: 5px 50px;
+  color: rgb(43, 111, 221);
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+  -webkit-transition: background-color 0.25s, color 0.25s;
+  -moz-transition: background-color 0.25s, color 0.25s;
+  -ms-transition: background-color 0.25s, color 0.25s;
+  -o-transition: background-color 0.25s, color 0.25s;
+  width: 200px;
+  text-decoration: none;
+  box-shadow: 0px 0px 10px rgba(155, 155, 155, 0.548);
+}
+
+.buttons-container button:hover,
+.buttons-container a:hover {
+  background-color: rgb(78, 132, 218);
+  color: white;
 }

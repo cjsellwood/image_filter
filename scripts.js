@@ -1,5 +1,5 @@
 const imageForm = document.querySelector("#image-upload");
-const filterForm = document.querySelector("#filter-form")
+const filterForm = document.querySelector("#filter-form");
 const container = document.querySelector(".container");
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -19,7 +19,6 @@ function handleUpload(e) {
     imageForm.style.display = "none";
     canvas.style.display = "block";
     filterForm.style.display = "flex";
-
 
     // Add to canvas
     const canvasImage = new Image();
@@ -48,16 +47,13 @@ function handleUpload(e) {
 imageForm.addEventListener("submit", handleUpload);
 
 function showFile(e) {
-  console.log(e);
-  console.log(e.target.files[0])
-  const fileLabel = document.querySelector("label[for='image-input']")
+  const fileLabel = document.querySelector("label[for='image-input']");
   fileLabel.textContent = e.target.files[0].name;
 }
 
-const fileLabel = document.querySelector("label[for='image-input']")
+const fileLabel = document.querySelector("label[for='image-input']");
 const fileInput = document.querySelector("input");
-fileInput.addEventListener("input", showFile)
-
+fileInput.addEventListener("input", showFile);
 
 let originalImage;
 
@@ -114,82 +110,11 @@ function edges() {
     pixelGrid.push(inner);
   }
 
-  // perform edge calculations
-  function edgeCalculation(grid) {
-    // create copy of grid for calculations
-    const copy = [];
-    for (let i = 0; i < grid.length; i++) {
-      const inner = [];
-      for (let j = 0; j < grid[i].length; j++) {
-        inner.push({ ...grid[i][j] });
-      }
-      copy.push(inner);
-    }
-
-    // gx array and gy array
-    const gx = [
-      [-1, 0, 1],
-      [-2, 0, 2],
-      [-1, 0, 1],
-    ];
-    const gy = [
-      [-1, -2, -1],
-      [0, 0, 0],
-      [1, 2, 1],
-    ];
-
-    for (let i = 0; i < copy.length; i++) {
-      for (let j = 0; j < copy[i].length; j++) {
-        let gxRed = 0;
-        let gxGreen = 0;
-        let gxBlue = 0;
-        let gyRed = 0;
-        let gyGreen = 0;
-        let gyBlue = 0;
-
-        for (let x = -1; x <= 1; x++) {
-          for (let y = -1; y <= 1; y++) {
-            // don't add to sum if over the boundaries of image
-            if (
-              i + x !== -1 &&
-              j + y !== -1 &&
-              i + x !== copy.length &&
-              j + y !== copy[i].length
-            ) {
-              //calculate gxRed gxGreen gxBlue gyRed gyGreen gyBlue
-              gxRed += gx[x + 1][y + 1] * copy[i + x][j + y].r;
-              gxGreen += gx[x + 1][y + 1] * copy[i + x][j + y].g;
-              gxBlue += gx[x + 1][y + 1] * copy[i + x][j + y].b;
-              gyRed += gy[x + 1][y + 1] * copy[i + x][j + y].r;
-              gyGreen += gy[x + 1][y + 1] * copy[i + x][j + y].g;
-              gyBlue += gy[x + 1][y + 1] * copy[i + x][j + y].b;
-            }
-          }
-        }
-        // image[i][j].r = sqrt(gx_red^2 + gy_red^2) and < 255
-        let newRed = Math.round(Math.sqrt(gxRed ** 2 + gyRed ** 2));
-        let newGreen = Math.round(Math.sqrt(gxGreen ** 2 + gyGreen ** 2));
-        let newBlue = Math.round(Math.sqrt(gxBlue ** 2 + gyBlue ** 2));
-
-        // ensure not greater than 255
-        newRed = newRed > 255 ? 255 : newRed;
-        newGreen = newGreen > 255 ? 255 : newGreen;
-        newBlue = newBlue > 255 ? 255 : newBlue;
-
-        grid[i][j].r = newRed;
-        grid[i][j].g = newGreen;
-        grid[i][j].b = newBlue;
-      }
-    }
-
-    return grid;
-  }
-
+  // perform edge calculation on pixel grid
   const edgedGrid = edgeCalculation(pixelGrid);
 
-  // works
-  const edgedArray = [];
   // transform back to image data object
+  const edgedArray = [];
   for (let i = 0; i < edgedGrid.length; i++) {
     for (let j = 0; j < edgedGrid[i].length; j++) {
       edgedArray.push(edgedGrid[i][j].r);
@@ -199,7 +124,6 @@ function edges() {
     }
   }
 
-  // works
   const edgedPixels = new ImageData(
     new Uint8ClampedArray(edgedArray),
     filteredImage.width,
@@ -211,6 +135,77 @@ function edges() {
 
   // add to canvas
   ctx.putImageData(edgedPixels, 0, 0);
+}
+
+// perform edge calculations
+function edgeCalculation(grid) {
+  // create copy of grid for calculations
+  const copy = [];
+  for (let i = 0; i < grid.length; i++) {
+    const inner = [];
+    for (let j = 0; j < grid[i].length; j++) {
+      inner.push({ ...grid[i][j] });
+    }
+    copy.push(inner);
+  }
+
+  // gx array and gy array
+  const gx = [
+    [-1, 0, 1],
+    [-2, 0, 2],
+    [-1, 0, 1],
+  ];
+  const gy = [
+    [-1, -2, -1],
+    [0, 0, 0],
+    [1, 2, 1],
+  ];
+
+  for (let i = 0; i < copy.length; i++) {
+    for (let j = 0; j < copy[i].length; j++) {
+      let gxRed = 0;
+      let gxGreen = 0;
+      let gxBlue = 0;
+      let gyRed = 0;
+      let gyGreen = 0;
+      let gyBlue = 0;
+
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          // don't add to sum if over the boundaries of image
+          if (
+            i + x !== -1 &&
+            j + y !== -1 &&
+            i + x !== copy.length &&
+            j + y !== copy[i].length
+          ) {
+            //calculate gxRed gxGreen gxBlue gyRed gyGreen gyBlue
+            gxRed += gx[x + 1][y + 1] * copy[i + x][j + y].r;
+            gxGreen += gx[x + 1][y + 1] * copy[i + x][j + y].g;
+            gxBlue += gx[x + 1][y + 1] * copy[i + x][j + y].b;
+            gyRed += gy[x + 1][y + 1] * copy[i + x][j + y].r;
+            gyGreen += gy[x + 1][y + 1] * copy[i + x][j + y].g;
+            gyBlue += gy[x + 1][y + 1] * copy[i + x][j + y].b;
+          }
+        }
+      }
+      // image[i][j].r = sqrt(gx_red^2 + gy_red^2) and < 255
+      let newRed = Math.round(Math.sqrt(gxRed ** 2 + gyRed ** 2));
+      let newGreen = Math.round(Math.sqrt(gxGreen ** 2 + gyGreen ** 2));
+      let newBlue = Math.round(Math.sqrt(gxBlue ** 2 + gyBlue ** 2));
+
+      // ensure not greater than 255
+      newRed = newRed > 255 ? 255 : newRed;
+      newGreen = newGreen > 255 ? 255 : newGreen;
+      newBlue = newBlue > 255 ? 255 : newBlue;
+
+      grid[i][j].r = newRed;
+      grid[i][j].g = newGreen;
+      grid[i][j].b = newBlue;
+    }
+  }
+
+  return grid;
 }
 
 const edgesButton = document.querySelector("#edges-button");
@@ -234,11 +229,9 @@ function colorChange(property, unit, e) {
   for (const filter in filters) {
     filtersArray.push(filters[filter]);
   }
-  // console.log(filtersArray);
 
   // apply filters
   ctx.filter = filtersArray.join(" ");
-  // console.log(filtersArray.join(" "));
 
   // draw image with filters too canvas
   ctx.drawImage(imageClone, 0, 0);
@@ -293,11 +286,8 @@ contrastSlider.addEventListener("input", (e) =>
   colorChange("contrast", "%", e)
 );
 
-// Restore original image and filters
+// Restore original sliders, image and filters
 function resetImage() {
-  // Replace with original image
-  // ctx.putImageData(originalImage, 0, 0);
-
   // Reset sliders
   brightnessSlider.value = 100;
   grayscaleSlider.value = 0;
@@ -309,28 +299,13 @@ function resetImage() {
   opacitySlider.value = 100;
   contrastSlider.value = 100;
 
-  // Reset filters
-  filters = {
-    brightness: null,
-    grayscale: null,
-    sepia: null,
-    invert: null,
-    blur: null,
-    saturate: null,
-    "hue-rotate": null,
-    opacity: null,
-    contrast: null,
-  };
+  for (const filter in filters) {
+    filters[filter] = null;
+  }
 
   // create new image as copy of original image
   const imageClone = new Image();
   imageClone.src = drawnImage.src;
-
-  // combine all filters
-  const filtersArray = [];
-  for (const filter in filters) {
-    filtersArray.push(filters[filter]);
-  }
 
   // clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -346,10 +321,9 @@ resetButton.addEventListener("click", resetImage);
 
 // Download image
 function downloadImage() {
-  const imageURL = canvas.toDataURL("image/png");
-  console.log(imageURL);
+  const imageURL = canvas.toDataURL("image/jpeg");
   this.href = imageURL;
-  this.download = "image.png";
+  this.download = "image.jpeg";
 }
 
 const downloadButton = document.querySelector("#download-button");
