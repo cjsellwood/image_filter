@@ -47,6 +47,18 @@ function handleUpload(e) {
 
 imageForm.addEventListener("submit", handleUpload);
 
+function showFile(e) {
+  console.log(e);
+  console.log(e.target.files[0])
+  const fileLabel = document.querySelector("label[for='image-input']")
+  fileLabel.textContent = e.target.files[0].name;
+}
+
+const fileLabel = document.querySelector("label[for='image-input']")
+const fileInput = document.querySelector("input");
+fileInput.addEventListener("input", showFile)
+
+
 let originalImage;
 
 // edge highlight filter

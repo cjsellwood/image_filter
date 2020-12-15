@@ -13,7 +13,7 @@
   align-items: center;
   padding: 10px;
   box-sizing: border-box;
-  background-color: rgba(146, 146, 146, 0.116);
+  background-color: rgba(193, 196, 214, 0.157);
 }
 
 #image-upload {
@@ -25,7 +25,7 @@
   height: 100%;
 }
 
-#image-upload div {
+#image-upload > div {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,25 +35,94 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
-  padding: 10px 20px;
+  padding: 10px 50px;
   box-shadow: 0px 0px 10px rgba(155, 155, 155, 0.548);
+  border: 2px solid rgba(53, 125, 240, 0.575);
+}
+
+#image-upload > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 #image-upload label {
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-family: Arial, Helvetica, sans-serif;
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 400;
   padding: 10px;
+  background-color: white;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  border: 1px solid rgb(206, 206, 206);
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  margin: 15px;
+  width: 30vw;
+  min-width: 400px;
+  text-align: center;
+}
+
+#image-upload label:hover {
+  background-color: rgb(236, 236, 236);
+  transition: background-color 0.3s, color 0.3s;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+  -moz-transition: background-color 0.3s, color 0.3s;
+  -ms-transition: background-color 0.3s, color 0.3s;
+  -o-transition: background-color 0.3s, color 0.3s;
+}
+
+#image-upload h1 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding: 10px;
+  background-color: white;
+  color: rgb(43, 111, 221);
 }
 
 #image-upload input {
-
+  color: rgb(43, 111, 221);
+  font-size: 1.3rem;
+  margin: 20px;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(43, 111, 221, 0.26);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  outline: none;
 }
 
 #image-upload button {
-  border: none;
+  border: 1px solid rgb(43, 111, 221);
+  border-radius: 20px;
   outline: none;
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+  font-size: 1.4rem;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  padding: 5px 50px;
+  color: rgb(43, 111, 221);
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+  -webkit-transition: background-color 0.25s, color 0.25s;
+  -moz-transition: background-color 0.25s, color 0.25s;
+  -ms-transition: background-color 0.25s, color 0.25s;
+  -o-transition: background-color 0.25s, color 0.25s;
+}
+
+#image-upload button:hover {
+  background-color: rgb(78, 132, 218);
+  color: white;
 }
 
 #image-input {
@@ -76,9 +145,9 @@
 #download-button {
   text-decoration: none;
   color: black;
-  border:1px solid rgb(121, 121, 121);
+  border: 1px solid rgb(121, 121, 121);
   display: block;
-  outline:rgb(110, 110, 110);
+  outline: rgb(110, 110, 110);
   border-radius: 2px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -89,18 +158,21 @@
   font-size: 14px;
 }
 
-.top-left, .top-right {
+.top-left,
+.top-right {
   width: 50%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.top-left input, .top-right input {
+.top-left input,
+.top-right input {
   width: 75%;
 }
 
-.top-left label, .top-right label {
+.top-left label,
+.top-right label {
   width: 25%;
   text-align: center;
   padding: 5px;
