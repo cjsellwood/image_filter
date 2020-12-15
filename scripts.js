@@ -1,4 +1,5 @@
 const imageForm = document.querySelector("#image-upload");
+const filterForm = document.querySelector("#filter-form")
 const container = document.querySelector(".container");
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -14,11 +15,11 @@ function handleUpload(e) {
 
   // Will run whenever a readAs method is used
   reader.onload = function (e) {
-    // Append image element
-    // const imageElement = document.createElement("img");
-    // imageElement.src = e.target.result;
-    // container.append(imageElement);
+    // hide form and show canvas and filter form
     imageForm.style.display = "none";
+    canvas.style.display = "block";
+    filterForm.style.display = "flex";
+
 
     // Add to canvas
     const canvasImage = new Image();
@@ -48,37 +49,7 @@ imageForm.addEventListener("submit", handleUpload);
 
 let originalImage;
 
-// function to change image colors
-
-// change brightness
-// function changeBrightness() {
-//   // console.log(this.value);
-//   // console.log(originalImage);
-//   // const pixels = new ImageData(
-//   //   new Uint8ClampedArray(originalImage.data),
-//   //   originalImage.width,
-//   //   originalImage.height
-//   // );
-
-//   // // loop over each pixel
-//   // for (let i = 0; i < pixels.data.length; i += 4) {
-//   //   pixels.data[i + 0] = pixels.data[i] + Number(this.value);
-//   //   pixels.data[i + 1] = pixels.data[i + 1] + Number(this.value);
-//   //   pixels.data[i + 2] = pixels.data[i + 2] + Number(this.value);
-//   // }
-//   // // console.log(rgbPixels);
-
-//   // // Add to canvas
-//   // ctx.putImageData(pixels, 0, 0);
-
-//   // use canvas filters
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   ctx.filter = `brightness(${this.value}%)`;
-//   const imageClone = new Image();
-//   imageClone.src = drawnImage.src;
-//   ctx.drawImage(imageClone, 0, 0);
-// }
-
+// edge highlight filter
 function edges() {
   // clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -95,11 +66,11 @@ function edges() {
 
   // apply filters
   ctx.filter = filtersArray.join(" ");
-  ctx.drawImage(imageClone, 0, 0);
-  console.log("filter");
 
+  ctx.drawImage(imageClone, 0, 0);
+
+  // get filtered image data
   const filteredImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  console.log(filteredImage);
 
   const pixels = new ImageData(
     new Uint8ClampedArray(filteredImage.data),
@@ -107,83 +78,127 @@ function edges() {
     filteredImage.height
   );
 
-  console.log(pixels);
   const pixelsArray = [];
 
   // create object for each pixel and add to array of pixels
   for (let i = 0; i < pixels.data.length; i += 4) {
-    // pixels.data[i + 0] = 255;
     const one = {
       r: pixels.data[i],
       g: pixels.data[i + 1],
       b: pixels.data[i + 2],
-      a: pixels.data[i + 3]
-    }
+      a: pixels.data[i + 3],
+    };
     pixelsArray.push(one);
   }
 
-  console.log(pixelsArray);
-  console.log(pixels.width);
-
-  const pixelGrid = [];
+  let pixelGrid = [];
 
   // create nested arrays as rows of pixels
   for (let i = 0; i < pixels.height; i++) {
-    const inner = []
+    const inner = [];
     for (let j = 0; j < pixels.width; j++) {
-      inner.push(pixelsArray[i + j])
+      inner.push(pixelsArray[pixels.width * i + j]);
     }
     pixelGrid.push(inner);
   }
 
-  console.log(pixelGrid[0]);
+  // perform edge calculations
+  function edgeCalculation(grid) {
+    // create copy of grid for calculations
+    const copy = [];
+    for (let i = 0; i < grid.length; i++) {
+      const inner = [];
+      for (let j = 0; j < grid[i].length; j++) {
+        inner.push({ ...grid[i][j] });
+      }
+      copy.push(inner);
+    }
 
-  // test to see if can affect nested grid
-  for (let i = 450; i < 550; i++) {
-    for (let j = 450; j < 450; j++) {
-      pixelGrid[i][j].g = 255;
-    } 
+    // gx array and gy array
+    const gx = [
+      [-1, 0, 1],
+      [-2, 0, 2],
+      [-1, 0, 1],
+    ];
+    const gy = [
+      [-1, -2, -1],
+      [0, 0, 0],
+      [1, 2, 1],
+    ];
+
+    for (let i = 0; i < copy.length; i++) {
+      for (let j = 0; j < copy[i].length; j++) {
+        let gxRed = 0;
+        let gxGreen = 0;
+        let gxBlue = 0;
+        let gyRed = 0;
+        let gyGreen = 0;
+        let gyBlue = 0;
+
+        for (let x = -1; x <= 1; x++) {
+          for (let y = -1; y <= 1; y++) {
+            // don't add to sum if over the boundaries of image
+            if (
+              i + x !== -1 &&
+              j + y !== -1 &&
+              i + x !== copy.length &&
+              j + y !== copy[i].length
+            ) {
+              //calculate gxRed gxGreen gxBlue gyRed gyGreen gyBlue
+              gxRed += gx[x + 1][y + 1] * copy[i + x][j + y].r;
+              gxGreen += gx[x + 1][y + 1] * copy[i + x][j + y].g;
+              gxBlue += gx[x + 1][y + 1] * copy[i + x][j + y].b;
+              gyRed += gy[x + 1][y + 1] * copy[i + x][j + y].r;
+              gyGreen += gy[x + 1][y + 1] * copy[i + x][j + y].g;
+              gyBlue += gy[x + 1][y + 1] * copy[i + x][j + y].b;
+            }
+          }
+        }
+        // image[i][j].r = sqrt(gx_red^2 + gy_red^2) and < 255
+        let newRed = Math.round(Math.sqrt(gxRed ** 2 + gyRed ** 2));
+        let newGreen = Math.round(Math.sqrt(gxGreen ** 2 + gyGreen ** 2));
+        let newBlue = Math.round(Math.sqrt(gxBlue ** 2 + gyBlue ** 2));
+
+        // ensure not greater than 255
+        newRed = newRed > 255 ? 255 : newRed;
+        newGreen = newGreen > 255 ? 255 : newGreen;
+        newBlue = newBlue > 255 ? 255 : newBlue;
+
+        grid[i][j].r = newRed;
+        grid[i][j].g = newGreen;
+        grid[i][j].b = newBlue;
+      }
+    }
+
+    return grid;
   }
 
-  const transformArray = [];
+  const edgedGrid = edgeCalculation(pixelGrid);
+
+  // works
+  const edgedArray = [];
   // transform back to image data object
-  for (let i = 0; i < pixelGrid.length; i++) {
-    for (let j = 0; j < pixelGrid[i].length; j++) {
-      transformArray.push(pixelGrid[i][j].r)
-      transformArray.push(pixelGrid[i][j].g)
-      transformArray.push(pixelGrid[i][j].b)
-      transformArray.push(pixelGrid[i][j].a)
+  for (let i = 0; i < edgedGrid.length; i++) {
+    for (let j = 0; j < edgedGrid[i].length; j++) {
+      edgedArray.push(edgedGrid[i][j].r);
+      edgedArray.push(edgedGrid[i][j].g);
+      edgedArray.push(edgedGrid[i][j].b);
+      edgedArray.push(edgedGrid[i][j].a);
     }
   }
 
-  console.log("here")
-  console.log(pixels.data)
-  console.log(transformArray)
-
-  const transformPixels = new ImageData(
-    new Uint8ClampedArray(transformArray),
+  // works
+  const edgedPixels = new ImageData(
+    new Uint8ClampedArray(edgedArray),
     filteredImage.width,
     filteredImage.height
   );
 
-  console.log(transformPixels);
-  ctx.putImageData(transformPixels, 0, 0);
+  // clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-
-  // gx array and gy array
-  const gx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
-  const gy = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
-
-  // copy pixels variable so that changes to image don't effect next calculation
-  const pixelsCopy = new ImageData(
-    new Uint8ClampedArray(filteredImage.data),
-    filteredImage.width,
-    filteredImage.height
-  );
-
-   // treat pixels outside boundaries as black(0,0,0)
-
+  // add to canvas
+  ctx.putImageData(edgedPixels, 0, 0);
 }
 
 const edgesButton = document.querySelector("#edges-button");
@@ -207,11 +222,11 @@ function colorChange(property, unit, e) {
   for (const filter in filters) {
     filtersArray.push(filters[filter]);
   }
-  console.log(filtersArray);
+  // console.log(filtersArray);
 
   // apply filters
   ctx.filter = filtersArray.join(" ");
-  console.log(filtersArray.join(" "));
+  // console.log(filtersArray.join(" "));
 
   // draw image with filters too canvas
   ctx.drawImage(imageClone, 0, 0);
@@ -269,10 +284,10 @@ contrastSlider.addEventListener("input", (e) =>
 // Restore original image and filters
 function resetImage() {
   // Replace with original image
-  ctx.putImageData(originalImage, 0, 0);
+  // ctx.putImageData(originalImage, 0, 0);
 
   // Reset sliders
-  brightnessSlider.value = 0;
+  brightnessSlider.value = 100;
   grayscaleSlider.value = 0;
   sepiaSlider.value = 0;
   invertSlider.value = 0;
@@ -295,7 +310,23 @@ function resetImage() {
     contrast: null,
   };
 
-  console.log(filters);
+  // create new image as copy of original image
+  const imageClone = new Image();
+  imageClone.src = drawnImage.src;
+
+  // combine all filters
+  const filtersArray = [];
+  for (const filter in filters) {
+    filtersArray.push(filters[filter]);
+  }
+
+  // clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // apply filters
+  ctx.filter = "none";
+
+  ctx.drawImage(imageClone, 0, 0);
 }
 
 const resetButton = document.querySelector("#reset-button");
